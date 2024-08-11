@@ -6,7 +6,7 @@ from agent import generate_response
 
 # tag::setup[]
 # Page Config
-st.set_page_config("Ebert", page_icon=":movie_camera:")
+st.set_page_config("Graph Chatbot", page_icon=":book:",layout ="centered")
 # end::setup[]
 
 # tag::session[]
@@ -20,22 +20,20 @@ if "messages" not in st.session_state:
 # tag::submit[]
 # Submit handler
 def handle_submit(message):
-    """
-    Submit handler:
-
-    You will modify this method to talk with an LLM and provide
-    context using data from Neo4j.
-    """
-
     # Handle the response
-    with st.spinner('searching...'):
+    with st.spinner('searching in the knowelge Graph...'):
         # Call the agent
         response = generate_response(message)
         write_message('assistant', response)
         
 # end::submit[]
-
-
+st.title("Graph chatbot :book:")
+st.markdown(
+    """
+    Welcome to the Graph Chatbot! Ask me anything in the graph data.
+    """, 
+    unsafe_allow_html=True
+)
 # tag::chat[]
 # Display messages in Session State
 for message in st.session_state.messages:
