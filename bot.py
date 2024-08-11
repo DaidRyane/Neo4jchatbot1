@@ -27,7 +27,7 @@ def handle_submit(message):
         write_message('assistant', response)
         
 # end::submit[]
-st.title("Graph chatbot :book:")
+st.title("Graph Chatbot :book:")
 st.markdown(
     """
     Welcome to the Graph Chatbot! Ask me anything in the graph data.
