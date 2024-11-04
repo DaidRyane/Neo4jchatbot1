@@ -152,7 +152,7 @@ with st.sidebar:
         "A partir de la base de donnée explique le rôle des cellules neurale dans la squellettogenèse faciaux ?",
         "A partir de la base de donnée peut tu me suggérer des image https du sujet précédant" ,
         "A partir de la base de donnée quelle est l'origine des bourgeons facieux ?",
-        "Où puis-je trouver des informations sur [sujet] ?"
+        "A partir de la base de donnée quelle est la relation entre les bourgeons facieux et l'embryologie ?"
     ]
     
     for question in example_questions:
@@ -184,7 +184,7 @@ if prompt := st.chat_input("Posez votre question ici..."):
 st.markdown("---")
 st.markdown(
     """
-    💡 Conseil : Posez des questions précises pour obtenir les meilleures réponses,éviter les fautes d'orthorgraphs et pour instant assisant na pas une memoire long donc faut luui a partir de la question précédant 
+    💡 Conseil : Posez des questions précises pour obtenir les meilleures réponses,éviter les fautes d'orthorgraphs et pour instant assistant na pas une memoire long donc faut lui dire a partir de la question précédant 
     """,
     unsafe_allow_html=True
 )
