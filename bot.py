@@ -150,7 +150,7 @@ with st.sidebar:
     st.markdown("### 💡 Suggestions de questions")
     example_questions = [
         "A partir de la base de donnée explique le role des cellules neurale dans la squellettogenèse faciale ?",
-        "A partir de la base de donnée peut tu me suggérer des image https du sujet précédant ,
+        "A partir de la base de donnée peut tu me suggérer des image https du sujet précédant" ,
         "A partir de la base de donnée quelle est l'origine des bourgeon facieux ?",
         "Où puis-je trouver des informations sur [sujet] ?"
     ]
