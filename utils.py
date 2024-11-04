@@ -20,3 +20,9 @@ def write_message(role, content, save = True):
 def get_session_id():
     return get_script_run_ctx().session_id
 # end::get_session_id[]
+#[theme] 
+#primaryColor="#8c39e4"
+#backgroundColor="#ffe4e1"
+#secondaryBackgroundColor="#ffc0cb"
+#textColor="#433832"
+#font="serif"

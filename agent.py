@@ -1,89 +1,62 @@
 from llm import llm
 from graph import graph
-
 from langchain_core.prompts import ChatPromptTemplate
 from langchain.schema import StrOutputParser
-from langchain_core.prompts import PromptTemplate
 from langchain.tools import Tool
-
 from langchain_community.chat_message_histories import Neo4jChatMessageHistory
-
 from langchain.agents import AgentExecutor, create_react_agent
 from langchain_core.runnables.history import RunnableWithMessageHistory
 from langchain import hub
-
-from tools.cypher import cypher_qa
 from utils import get_session_id
+from tools.cypher import cypher_qa
+from tools.vector import get_course_paragraph
 
+# Création du template de prompt pour les messages du chatbot
 chat_prompt = ChatPromptTemplate.from_messages(
     [
-        ("system", "You are a neo4j expert providing information ."),
+        ("system", "You are a teacher providing information about course content. Do not answer any questions using your pre-trained knowledge, only use the information provided in the context."),
         ("human", "{input}"),
     ]
 )
 
-movie_chat = chat_prompt | llm | StrOutputParser()
+# Création de l'outil pour répondre aux questions générales et de cours
+course_chat = chat_prompt | llm | StrOutputParser()
 
 tools = [
     Tool.from_function(
         name="General Chat",
-        description="For general movie chat not covered by other tools",
-        func=movie_chat.invoke,
+        description="For general chat about the course not covered by other tools",
+        func=course_chat.invoke,
     ),
     Tool.from_function(
-        name="Movie information",
-        description="Provide information about movies questions using Cypher",
-        func = cypher_qa
-    )
+        name="Course Plot Search",  
+        description=" Quand tu veux avoir des réponses basées sur la recherche dans la base de donné",
+        func=get_course_paragraph,
+    ), 
+    Tool.from_function(
+        name="Course Information",
+        description=" répond a des question simple sur un cours via des requette cypher  present dans la base de donné ",
+        func=cypher_qa.invoke
+    ),
+
 ]
+
+# Fonction pour récupérer l'historique des messages avec une session Neo4j
 def get_memory(session_id):
     return Neo4jChatMessageHistory(session_id=session_id, graph=graph)
 
-agent_prompt = PromptTemplate.from_template("""
-You are a Neo4j expert providing information .
-Be as helpful as possible and return as much information as possible it need to be showed to the user .
+# Chargement du modèle d'agent
+agent_prompt = hub.pull("hwchase17/react-chat")
 
-
-Do not answer any questions using your pre-trained knowledge, only use the information provided in the context.
-
-TOOLS:
-------
-
-You have access to the following tools:
-
-{tools}
-
-To use a tool, please use the following format:
-
-```
-Thought: Do I need to use a tool? Yes
-Action: the action to take, should be one of [{tool_names}]
-Action Input: the input to the action
-Observation: the result of the action
-```
-
-When you have a response to say to the Human, or if you do not need to use a tool, you MUST use the format:
-
-```
-Thought: Do I need to use a tool? No
-Final Answer: [your response here]
-```
-
-Begin!
-
-Previous conversation history:
-{chat_history}
-
-New input: {input}
-{agent_scratchpad}
-""")
+# Création de l'agent réactif
 agent = create_react_agent(llm, tools, agent_prompt)
 agent_executor = AgentExecutor(
     agent=agent,
     tools=tools,
     verbose=True
-    )
+)
 
+# Création de l'agent de conversation avec historique des messages
 chat_agent = RunnableWithMessageHistory(
     agent_executor,
     get_memory,
@@ -91,14 +64,14 @@ chat_agent = RunnableWithMessageHistory(
     history_messages_key="chat_history",
 )
 
+# Fonction pour générer une réponse
 def generate_response(user_input):
     """
-    Create a handler that calls the Conversational agent
-    and returns a response to be rendered in the UI
+    Appelle l'agent de conversation et renvoie une réponse
+    pour l'interface utilisateur.
     """
-
     response = chat_agent.invoke(
         {"input": user_input},
-        {"configurable": {"session_id": get_session_id()}},)
-
+        {"configurable": {"session_id": get_session_id()}}
+    )
     return response['output']
