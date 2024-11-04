@@ -149,9 +149,9 @@ with st.sidebar:
     # Suggestions de questions
     st.markdown("### 💡 Suggestions de questions")
     example_questions = [
-        "Peux-tu me résumer le contenu du premier module ?",
-        "Quels sont les sujets abordés dans ce cours ?",
-        "Explique-moi le concept de [sujet] ?",
+        "A partir de la base de donnée explique le role des cellules neurale dans la squellettogenèse faciale ?",
+        "A partir de la base de donnée peut tu me suggérer des image https du sujet précédant ,
+        "A partir de la base de donnée quelle est l'origine des bourgeon facieux ?",
         "Où puis-je trouver des informations sur [sujet] ?"
     ]
     
@@ -184,7 +184,7 @@ if prompt := st.chat_input("Posez votre question ici..."):
 st.markdown("---")
 st.markdown(
     """
-    💡 Conseil : Posez des questions précises pour obtenir les meilleures réponses
+    💡 Conseil : Posez des questions précises pour obtenir les meilleures réponses,éviter les fautes d'orthorgraphs et pour instant assisant na pas une memoire long donc faut luui a partir de la question précédant 
     """,
     unsafe_allow_html=True
 )
